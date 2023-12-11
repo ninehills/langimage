@@ -86,9 +86,14 @@ RUN --mount=type=cache,target=/root/.cache \
     gradio mdtex2html sentencepiece accelerate \
     deepspeed
 
-RUN --mount=type=cache,target=/root/.cache pip install https://github.com/vllm-project/vllm/releases/download/v0.2.3/vllm-0.2.3+cu118-cp311-cp311-manylinux1_x86_64.whl
 
 RUN git clone https://github.com/hiyouga/LLaMA-Factory.git && cd LLaMA-Factory && pip install -U -r requirements.txt
+
+# Build with some basic utilities
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    unzip \
+&& rm -rf /var/lib/apt/lists/*
+
 
 # Add other tools
 ENV CODE_SERVER_VERSION=4.18.0
@@ -96,7 +101,10 @@ RUN mkdir -p code-server && curl -fL https://github.com/coder/code-server/releas
 
 RUN --mount=type=cache,target=/root/.cache pip install bitsandbytes tqdm scipy scikit-learn
 # start jupyter lab
+
+RUN --mount=type=cache,target=/root/.cache pip install -U xformers --index-url https://download.pytorch.org/whl/cu118
+RUN --mount=type=cache,target=/root/.cache pip install --use-deprecated=legacy-resolver "pydantic>2.5" https://github.com/vllm-project/vllm/releases/download/v0.2.3/vllm-0.2.3+cu118-cp311-cp311-manylinux1_x86_64.whl
+
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser"]
 
 EXPOSE 8888
-
