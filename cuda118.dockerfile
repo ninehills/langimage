@@ -78,6 +78,7 @@ RUN --mount=type=cache,target=/root/.cache \
     deepspeed
 
 
+RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
 RUN --mount=type=cache,target=/root/.cache \
     cd LLaMA-Factory && pip install -U -r requirements.txt
 
