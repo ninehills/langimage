@@ -57,7 +57,7 @@ RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
 
 # build with some basic python packages
 RUN --mount=type=cache,target=/root/.cache \
-    pip install \
+    pip install --use-deprecated=legacy-resolver \
     numpy \
     pandas \
     jupyterlab \
@@ -81,7 +81,7 @@ RUN --mount=type=cache,target=/root/.cache \
     "pydantic>2.5" \
     "https://github.com/vllm-project/vllm/releases/download/v0.2.7/vllm-0.2.7+cu118-cp311-cp311-manylinux1_x86_64.whl" \
     openllm \
-    && pip install -r requirements.txt
+    && cd LLaMA-Factory && pip install -r requirements.txt
     
 
 # Add other tools
