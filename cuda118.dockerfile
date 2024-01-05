@@ -53,6 +53,8 @@ RUN --mount=type=cache,target=/root/.cache \
 RUN --mount=type=cache,target=/root/.cache \
     pip3 install torch xformers --index-url https://download.pytorch.org/whl/cu118
 
+RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
+
 # build with some basic python packages
 RUN --mount=type=cache,target=/root/.cache \
     pip install \
@@ -75,17 +77,16 @@ RUN --mount=type=cache,target=/root/.cache \
     cpm_kernels \
     gradio mdtex2html sentencepiece accelerate \
     bitsandbytes tqdm scipy scikit-learn \
-    deepspeed
-
-
-RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
-RUN --mount=type=cache,target=/root/.cache \
-    cd LLaMA-Factory && pip install -U -r requirements.txt
+    deepspeed \
+    "pydantic>2.5" \
+    "https://github.com/vllm-project/vllm/releases/download/v0.2.7/vllm-0.2.7+cu118-cp311-cp311-manylinux1_x86_64.whl" \
+    openllm \
+    && pip install -r requirements.txt
+    
 
 # Add other tools
 ENV CODE_SERVER_VERSION=4.18.0
 RUN mkdir -p code-server && curl -fL https://github.com/coder/code-server/releases/download/v$CODE_SERVER_VERSION/code-server-$CODE_SERVER_VERSION-linux-amd64.tar.gz | tar zxvf /dev/stdin -C code-server --strip-components=1
-RUN --mount=type=cache,target=/root/.cache pip install --use-deprecated=legacy-resolver "pydantic>2.5" https://github.com/vllm-project/vllm/releases/download/v0.2.7/vllm-0.2.7+cu118-cp311-cp311-manylinux1_x86_64.whl
 
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser"]
 
