@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache \
     pip install --upgrade pip
 
 RUN --mount=type=cache,target=/root/.cache \
-    pip3 install torch xformers --index-url https://download.pytorch.org/whl/cu118
+    pip3 install torch xformers torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
 
@@ -82,7 +82,11 @@ RUN --mount=type=cache,target=/root/.cache \
     "https://github.com/vllm-project/vllm/releases/download/v0.2.7/vllm-0.2.7+cu118-cp311-cp311-manylinux1_x86_64.whl" \
     openllm \
     && cd LLaMA-Factory && pip install -r requirements.txt
-    
+
+RUN --mount=type=cache,target=/root/.cache \
+    pip install https://github.com/casper-hansen/AutoAWQ/releases/download/v0.1.8/autoawq-0.1.8+cu118-cp311-cp311-linux_x86_64.whl && \
+    pip install --upgrade auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/ &&\ 
+    pip install onnxruntime onnxruntime-gpu
 
 # Add other tools
 ENV CODE_SERVER_VERSION=4.18.0
