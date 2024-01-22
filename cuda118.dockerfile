@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache \
     pip install --upgrade pip
 
 RUN --mount=type=cache,target=/root/.cache \
-    pip3 install torch xformers torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    pip3 install torch xformers --index-url https://download.pytorch.org/whl/cu118
 
 RUN git clone https://github.com/hiyouga/LLaMA-Factory.git
 
